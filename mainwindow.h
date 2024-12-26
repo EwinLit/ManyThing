@@ -55,7 +55,8 @@ private:
     void reverse(bool rever);
     void refreshDataBase();
     void horizontalSort(int row);
-    QStringList executePython(QString scriptPath);
+    void executePython(QString scriptPath);
+    void installTools();
 };
 
 #endif // MAINWINDOW_H

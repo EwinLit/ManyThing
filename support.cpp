@@ -138,19 +138,22 @@ void MainWindow::horizontalSort(int row){
     else return;
 }
 
-QStringList MainWindow::executePython(QString scriptPath){
+void MainWindow::executePython(QString scriptPath){
     QProcess process;
-    QStringList lines;
     process.start("C://Users//bitap//AppData//Local//Programs//Python//Python39//python.exe",QStringList()<<scriptPath);
     if (!process.waitForStarted()) {
         QMessageBox::information(nullptr,"Error","Failed to start Python script.");
-        return lines;
+        return;
     }
     if (!process.waitForFinished()) {
         QMessageBox::information(nullptr,"Error","Python script execution failed.");
-        return lines;
+        return;
     }
     QMessageBox::information(nullptr,"Refresh","Refresh Finished");
+}
+
+void MainWindow::installTools(){
+
 }
 
 

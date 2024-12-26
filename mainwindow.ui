@@ -129,7 +129,7 @@
      <x>0</x>
      <y>0</y>
      <width>1300</width>
-     <height>23</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -138,6 +138,7 @@
     </property>
     <addaction name="actionRefresh"/>
     <addaction name="actionQuit"/>
+    <addaction name="actionInstall_Tools"/>
    </widget>
    <widget class="QMenu" name="menuSort">
     <property name="title">
@@ -251,6 +252,11 @@
   <action name="actionRefresh">
    <property name="text">
     <string>Refresh</string>
+   </property>
+  </action>
+  <action name="actionInstall_Tools">
+   <property name="text">
+    <string>Install Tools</string>
    </property>
   </action>
  </widget>

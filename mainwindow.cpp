@@ -28,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionAbout,&QAction::triggered,this,[&](){about();});
     connect(ui->actionHelp,&QAction::triggered,this,[&](){help();});
     connect(ui->tableWidget->horizontalHeader(),&QHeaderView::sectionClicked,this,[&](int row){horizontalSort(row);});
+    connect(ui->actionInstall_Tools,&QAction::triggered,this,[&](){installTools();});
 
 }
 
