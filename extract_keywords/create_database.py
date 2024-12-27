@@ -8,27 +8,31 @@ def create_database(db_path):
     cursor = conn.cursor()
     # 创建表
     cursor.execute('''
-        CREATE TABLE IF NOT EXISTS documents (
+        CREATE TABLE IF NOT EXISTS keyword_to_file (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            doc_id TEXT NOT NULL UNIQUE,
-            content TEXT NOT NULL
+            keyword TEXT NOT NULL,
+            doc_id TEXT NOT NULL
         )
     ''')
     conn.commit()
     conn.close()
 
 # 添加文档及其关键词到数据库
-def add_documents_to_database(db_path, documents):
+def add_data_to_database(db_path, documents):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
+    cursor.execute("DELETE FROM keyword_to_file")
     for doc_id, keywords in documents.items():
-        try:
+        for keyword in keywords:
+            # 检查是否已存在相同的关键词-文件名对
             cursor.execute('''
-                INSERT INTO documents (doc_id, content) 
-                VALUES (?, ?)
-            ''', (doc_id, " ".join(keywords)))
-        except sqlite3.IntegrityError:
-            print(f"Document {doc_id} already exists in the database.")
+                SELECT 1 FROM keyword_to_file WHERE keyword = ? AND doc_id = ?
+            ''', (keyword, doc_id))
+            if cursor.fetchone() is None:
+                # 插入数据
+                cursor.execute('''
+                    INSERT INTO keyword_to_file (keyword, doc_id) VALUES (?, ?)
+                ''', (keyword, doc_id))
     conn.commit()
     conn.close()
 
@@ -36,10 +40,10 @@ def add_documents_to_database(db_path, documents):
 def search_keywords(db_path, query_str):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    query = f"%{query_str}%"
+    #query = f"%{query_str}%"
     cursor.execute('''
-        SELECT doc_id FROM documents WHERE content LIKE ?
-    ''', (query,))
+        SELECT doc_id FROM keyword_to_file WHERE keyword = ?
+    ''', (query_str,))
     results = cursor.fetchall()
     conn.close()
     return [result[0] for result in results]
@@ -68,7 +72,21 @@ if __name__ == "__main__":
     create_database(db_path)
 
     # 添加文档到数据库
-    add_documents_to_database(db_path, documents)
+    add_data_to_database(db_path, documents)
+
+    conn = conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+
+    # 查询所有数据
+    cursor.execute("SELECT * FROM keyword_to_file")
+    rows = cursor.fetchall()
+
+    # 打印数据
+    for row in rows:
+        print(row)
+
+    # 关闭连接
+    conn.close()
 
     # 解析命令行参数进行关键词检索
     parser = argparse.ArgumentParser(description="Search for keywords in the SQLite database.")
