@@ -3,118 +3,107 @@
 #pip install Spire.Doc
 import fitz
 import os
-from docx import Document
+from docx import Document as DocxDocument
 from spire.doc import Document, FileFormat
-def pdf2txt(pdf_folder):
+from pathlib import Path  # 确保导入 Path
+def pdf2txt(pdf_file):
     """Convert all .pdf files in the specified folder and its subfolders to .txt files."""
     
-    if not os.path.exists(pdf_folder):
-        print("指定的文件夹不存在。")
+    if not os.path.exists(pdf_file):
+        print("指定的文件不存在。")
         return
     
-    #print("开始转换 PDF 文件...")
     
-    # 使用 os.walk 遍历文件夹及其子文件夹
-    for root, dirs, files in os.walk(pdf_folder):
-        for pdf_filename in files:
-            if pdf_filename.endswith('.pdf'):
-                pdf_path = os.path.join(root, pdf_filename)
-                
-                try:
-                    # 打开 PDF 文件
-                    pdf_document = fitz.open(pdf_path)
-                    
-                    # 获取 PDF 中的所有页面并将它们合并为一个字符串
-                    pdf_text = ""
-                    for page_num in range(pdf_document.page_count):
-                        page = pdf_document.load_page(page_num)
-                        pdf_text += page.get_text()
-                    
-                    # 创建一个 TXT 文件并将 PDF 内容写入其中
-                    txt_filename = os.path.splitext(pdf_filename)[0] + '.txt'
-                    txt_path = os.path.join(root, txt_filename)
-                    with open(txt_path, 'w', encoding='utf-8') as txt_file:
-                        txt_file.write(pdf_text)
-                    
-                    pdf_document.close()
-                    
-                    #print(f"成功转换 {pdf_path} 到 {txt_path}")
-                
-                except Exception as e:
-                    print(f"转换 {pdf_path} 时出错: {e}")
+    pdf_document = fitz.open(pdf_file)
+        
+        # 获取 PDF 中的所有页面并将它们合并为一个字符串
+    pdf_text = ""
+    for page_num in range(pdf_document.page_count):
+        page = pdf_document.load_page(page_num)
+        pdf_text += page.get_text()
     
+    # 创建输出文件路径（同一目录下的 .txt 文件）
+    txt_path = os.path.splitext(pdf_file)[0] + '.txt'
+    
+    # 创建一个 TXT 文件并将 PDF 内容写入其中
+    with open(txt_path, 'w', encoding='utf-8') as txt_file:
+        txt_file.write(pdf_text)
+    
+    pdf_document.close()
+    
+    print(f"成功转换 {pdf_file} 到 {txt_path}")
+
     #print("所有 PDF 文件已成功转换为 UTF-8 编码的 TXT 文件。")
 
-def convert_docx_to_txt(input_dir):
-    """遍历文件夹及子文件夹，将所有 .docx 文件转换为 .txt 文件"""
-    
-    if not os.path.exists(input_dir):
-        print("指定的文件夹不存在。")
+def convert_docx_to_txt(docx_file):
+    """
+    将指定的 .docx 文件转换为 TXT 文件，并保存在同一目录下。
+
+    :param docx_file: 指定的 .docx 文件路径。
+    """
+    if not os.path.exists(docx_file):
+        print("指定的文件不存在。")
         return
     
-    #dprint("开始转换 DOCX 文件...")
-    
-    # 使用 os.walk 遍历文件夹及其子文件夹
-    for root, dirs, files in os.walk(input_dir):
-        for file in files:
-            if file.lower().endswith('.docx'):
-                # 构造 .docx 文件路径
-                docx_file = os.path.join(root, file)
-                
-                # 构造对应的 .txt 文件路径
-                txt_file = os.path.join(root, file.replace('.docx', '.txt'))
-                
-                try:
-                    # 打开 .docx 文件并提取文本
-                    doc = Document(docx_file)
-                    
-                    # 将提取的文本写入 .txt 文件
-                    with open(txt_file, 'w', encoding='utf-8') as f:
-                        for para in doc.paragraphs:
-                            f.write(para.text + '\n')
-                    
-                    #print(f"成功转换 {docx_file} 为 {txt_file}")
-                
-                except Exception as e:
-                    print(f"转换 {docx_file} 时出错: {e}")
+    try:
+        # 构造对应的 .txt 文件路径
+        txt_path = os.path.splitext(docx_file)[0] + '.txt'
+        doc=DocxDocument(docx_file)
+        # 提取所有段落的文本
+        docx_text = "\n".join([para.text for para in doc.paragraphs])
+        
+        # 创建一个 TXT 文件并将 DOCX 内容写入其中
+        with open(txt_path, 'w', encoding='utf-8') as txt_file:
+            txt_file.write(docx_text)
 
+        # 使用 docx2txt 提取文本
+        #docx_text = docx_process(docx_file)
+        
+        # 创建一个 TXT 文件并将 DOCX 内容写入其中
+        
+        
+        print(f"成功转换 {docx_file} 到 {txt_path}")
+    
+    except Exception as e:
+        print(f"转换 {docx_file} 时出错: {e}")
 def remove_evaluation_warning(text):
     '''移除水印'''
     lines=text.splitlines()
     if "Evaluation Warning: "in lines[0]:
         return "\n".join(lines[1:])
     return text
-def doc2txt(input_dir):
+def doc2txt(doc_file):
     '''包含水印'''
-    if not os.path.exists(input_dir):
-        print("no exist ")
-        return 
-    #print("start transfering")
-
-    for root,dirs,files in os.walk(input_dir):
-        for file in files :
-            if file.lower().endswith('doc'):
-                doc_file=os.path.join(root,file)
-                txt_file=os.path.join(root,file.replace('doc','txt'))
-
-                try:
-                    doc = Document()
-                    doc.LoadFromFile(doc_file)
-                    doc.SaveToFile(txt_file,FileFormat.Txt)
-                    doc.Close()
-                    '''处理水印'''
-                    with open(txt_file,'r',encoding='utf-8')as f:
-                        content=f.read()
-                    clean_content=remove_evaluation_warning(content)
-                    with open(txt_file,'w',encoding='utf-8')as f:
-                        f.write(clean_content)
-                    #print(f"success trans{doc_file}to{txt_file}")
-                except Exception as e:
-                    print(f"make fault in trans {doc_file}:{e}") 
-
     
+    #print("start transfering")
+    txt_path=os.path.splitext(doc_file)[0]+'.txt'
+    doc=Document(doc_file)
+    doc.LoadFromFile(doc_file)
+    doc.SaveToFile(txt_path,FileFormat.Txt)
+    doc.Close()
+    with open(txt_path,'r',encoding='utf-8')as f:
+        content=f.read()
+    clean_content=remove_evaluation_warning(content)
+    with open(txt_path,'w',encoding='utf-8')as f:
+        f.write(clean_content)
+   
+
+def convert_file_to_txt(input_file):
+    """
+    根据文件后缀名选择调用相应的转换函数。
+
+    :param input_file: 输入文件路径。
+    """
+    file_extension = Path(input_file).suffix.lower()
+    
+    if file_extension == '.pdf':
+        pdf2txt(input_file)
+    elif file_extension == '.docx':
+        convert_docx_to_txt(input_file)
+    elif file_extension == '.doc':
+        doc2txt(input_file)
+    else:
+        print(f"不支持的文件类型: {file_extension}")
 if __name__=="__main__":
-    INPUTDIR="/home/ubuntu/jiah/workspace/file_manager/file_manager/utils"
-    pdf2txt(INPUTDIR)
-    convert_docx_to_txt(INPUTDIR)
-    doc2txt(INPUTDIR)
+    INPUTDIR="/home/ubuntu/jiah/workspace/ManyThing/database_work/test/sad.doc"
+    convert_file_to_txt(INPUTDIR)
