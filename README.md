@@ -13,6 +13,9 @@ git clone -b master https://github.com/EwinLit/ManyThing.git
 ```
 cd ManyThing
 chmod u+x install.sh
-./install.hh
+./install.sh
 ```
 4. 运行生成在主目录下的start.sh
+```
+~/start.sh
+```
