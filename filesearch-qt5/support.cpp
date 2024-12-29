@@ -70,8 +70,10 @@ void MainWindow::about(){
 
 
 void MainWindow::refreshDataBase(QString workPath){
+    dataBase.deleteTable();
+    echoInfo("Refreshing Database...");
     bfsDirectory(workPath);
-    QMessageBox::information(nullptr,"Database","Refresh Database Finished");
+    echoInfo("Refresh Database Finished.");
 }
 
 void MainWindow::refreshKeyWord(){
@@ -151,21 +153,19 @@ void MainWindow::bfsDirectory(QString path){
     directory.clear();
     directory.append(path);
     while(directory.empty()==false){
-        QDir dir(directory.front());
-        directory.pop_front();
+        QDir dir(directory.dequeue());
         if (!dir.exists() || !dir.isReadable()) {
             continue;
         }
-        QDirIterator it(path, QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
+        QDirIterator it(dir.path(), QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
         while (it.hasNext()) {
             QString currentPath = it.next();
             QFileInfo fileinfo(currentPath);
-            if (QFileInfo(currentPath).isDir()) {
+            if (fileinfo.isDir()) {
                 directory.append(currentPath);
             }
             else{
                 dataBase.insertItem(fileinfo.fileName(),fileinfo.absolutePath(),fileinfo.size()*0.001,MyTime(fileinfo.lastModified()).toString(),fileinfo.suffix());
-                dataBase.updateItem(fileinfo.fileName(),fileinfo.absolutePath(),fileinfo.size()*0.001,MyTime(fileinfo.lastModified()).toString());
             }
         }
     }

@@ -4,6 +4,8 @@
 #include <QMessageBox>
 #include <QSqlQuery>
 #include <QVariant>
+#include <QFile>
+#include <QDebug>
 #include "MyFile.h"
 class MySqlite{
 private:
@@ -13,8 +15,7 @@ public:
     MySqlite();
     bool connectDataBase(QString dataBaseName);
     QList<MyFile> queryKeyWord(QString keyWord);
-    void test();
-    void updateItem(QString name,QString path,double size,QString time);
+    void deleteTable();
     void insertItem(QString name,QString path,double size,QString time,QString type);
 };
 

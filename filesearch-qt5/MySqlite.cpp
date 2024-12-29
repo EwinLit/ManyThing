@@ -66,14 +66,6 @@ QList<MyFile> MySqlite::queryFile(QString _path,QString _name){
     return myFiles;
 }
 
-void MySqlite::test(){
-    return;
-    QSqlQuery query;
-    for(int i=0;i<45000;i++){
-        insertItem(QString("test")+QString::number(i+5000),"1",1.89,"doc","2001/01/01-01:01:01");
-    }
-}
-
 void MySqlite::insertItem(QString name, QString path, double size, QString time, QString type){
     QSqlQuery query;
     QString cmd = QString("INSERT INTO file (name, path, size, type, time) VALUES (\"%1\",\"%2\",%3,\"%4\",\"%5\")")
@@ -81,12 +73,10 @@ void MySqlite::insertItem(QString name, QString path, double size, QString time,
     query.exec(cmd);
 }
 
-void MySqlite::updateItem(QString name, QString path, double size, QString time){
+
+void MySqlite::deleteTable(){
     QSqlQuery query;
-    QString cmd = QString("UPDATE file "
-                          "SET size = %1, time = \"%2\""
-                          "WHERE path = \"%3\" and name = \"%4\";")
-            .arg(size).arg(time).arg(path).arg(name);
+    QString cmd = QString("DELETE FROM %1 WHERE 1").arg("file");
     query.exec(cmd);
 }
 
