@@ -38,6 +38,7 @@ private:
     int sortStatus;
     QString pythonPath;
     QString workPath;
+    QString bfsPath;
     QString splitSymbol;
     QQueue<QString> directory;
 
@@ -59,7 +60,7 @@ private:
     void handleCell(int row,int colum);
     void about();
     void reverse(bool rever);
-    void refreshDataBase(QString workPath);
+    void refreshDataBase();
     void refreshKeyWord();
     void horizontalSort(int row);
     void executePython(QString scriptPath);

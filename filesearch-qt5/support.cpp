@@ -65,14 +65,14 @@ void MainWindow::reverse(bool rever){
 }
 
 void MainWindow::about(){
-    QMessageBox::information(nullptr,"About","Group Member:\n2024E8013282035 尹继营\n2024E8013282035 童瑜嫣\n2024E8013282035 贾   辉");
+    QMessageBox::information(nullptr,"About","Group Member:\n尹继营\n童瑜嫣\n贾   辉");
 }
 
 
-void MainWindow::refreshDataBase(QString workPath){
+void MainWindow::refreshDataBase(){
     dataBase.deleteTable();
     echoInfo("Refreshing Database...");
-    bfsDirectory(workPath);
+    bfsDirectory(bfsPath);
     echoInfo("Refresh Database Finished.");
 }
 
@@ -176,11 +176,13 @@ void MainWindow::localize(){
     if(osVersion.type()==QOperatingSystemVersion::Windows){
         pythonPath = "C://Users//bitap//AppData//Local//Programs//Python//Python39//python.exe";
         workPath = "D://Code//Qt//ManyThing//.filesearch//";
+        bfsPath = "D://Code//";
         splitSymbol = "//";
     }
     else{
         pythonPath = "python";
         workPath = QDir::homePath()+"/.filesearch/";
+        bfsPath = QDir::homePath();
         splitSymbol = "/";
     }
 }

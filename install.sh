@@ -1,11 +1,9 @@
+rm -rf ~/.filesearch
 mkdir ~/.filesearch
-# cp -R extract_keywords ~/.filesearch
-# cp -R database_work ~/.filesearch
-cd filesearch-qt5/
-qmake-qt5
+cp -r ./filesearch-qt5 ~/.filesearch/
+cd ~/.filesearch/filesearch-qt5
+qmake filesearch.pro
 make clean
 make
-cp -R . ~/.filesearch
-ln -s ~/.filesearch/filesearch ~/Desktop/filesearch
-chmod u+x ~/Desktop/filesearch
-
+echo ~/.filesearch/filesearch-qt5/filesearch > ~/filesearch.sh
+chmod 777 ~/filesearch.sh

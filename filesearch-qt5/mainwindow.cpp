@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     search("");
 
-    connect(ui->actionRefreshDataBase,&QAction::triggered,this,[&](){refreshDataBase(workPath);});
+    connect(ui->actionRefreshDataBase,&QAction::triggered,this,[&](){refreshDataBase();});
     connect(ui->actionRefreshKeyWord,&QAction::triggered,this,[&](){refreshKeyWord();});
 
     connect(ui->actionQuit,&QAction::triggered,this,[&](){MainWindow::close();});
