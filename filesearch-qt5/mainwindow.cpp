@@ -5,11 +5,10 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+
+    localize();
+
     sortStatus = 0;
-    pythonPath = "C://Users//bitap//AppData//Local//Programs//Python//Python39//python.exe";
-    workPath = "D://";
-//    pythonPath = "python";
-//    workPath = QDir::homePath()+"/.filesearch/";
     ui->setupUi(this);
 
     this->setWindowTitle("File Searcher");
@@ -22,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     search("");
 
-    connect(ui->actionRefreshDataBase,&QAction::triggered,this,[&](){refreshDataBase();});
+    connect(ui->actionRefreshDataBase,&QAction::triggered,this,[&](){refreshDataBase(workPath);});
     connect(ui->actionRefreshKeyWord,&QAction::triggered,this,[&](){refreshKeyWord();});
 
     connect(ui->actionQuit,&QAction::triggered,this,[&](){MainWindow::close();});
@@ -39,7 +38,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->tableWidget->horizontalHeader(),&QHeaderView::sectionClicked,this,[&](int row){horizontalSort(row);});
     connect(ui->tableWidget,&QTableWidget::cellClicked,this,[&](int row,int colum){handleCell(row,colum);});
-    //connect(ui->tableWidget,&QTableWidget::cellDoubleClicked,this,[&](int row,int colum){openFile(row,colum);});
 }
 
 MainWindow::~MainWindow()
@@ -53,9 +51,9 @@ void MainWindow::refreshTable(bool rever){
     ui->tableWidget->clear();
     ui->tableWidget->setColumnCount(5);
     ui->tableWidget->setHorizontalHeaderLabels(QStringList()<<"Name"<<"Path"<<"Size"<<"Type"<<"Edit Time");
-    ui->tableWidget->setColumnWidth(0,170);
+    ui->tableWidget->setColumnWidth(0,150);
     ui->tableWidget->setColumnWidth(1,400);
-    ui->tableWidget->setColumnWidth(2,100);
+    ui->tableWidget->setColumnWidth(2,120);
     ui->tableWidget->setColumnWidth(3,100);
     ui->tableWidget->setColumnWidth(4,200);
     ui->tableWidget->verticalHeader()->setVisible(false);
@@ -105,16 +103,7 @@ void MainWindow::setIcon(int choice){
 void MainWindow::setTestBrowser(int row){
     ui->textBrowser->clear();
     MyFile myfile = myFileList.at(row);
-    QString path(myfile.getPath()+"//"+myfile.getName());
-    QString tempPath(workPath+"temp.txt");
-//    if(path.contains(".doc")||path.contains(".docx")){
-//        executePython(workPath+"readWord.py");
-//        path = tempPath;
-//    }
-//    if(path.contains(".pdf")){
-//        executePython(workPath+"readPdf.py");
-//        path = tempPath;
-//    }
+    QString path(myfile.getPath()+splitSymbol+myfile.getName());
     QFile file(path);
     if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) return;
     QTextStream in(&file);
@@ -126,7 +115,6 @@ void MainWindow::setTestBrowser(int row){
         lines.append(in.readLine());
     }
     file.close();
-    if(QFile::exists(tempPath)) QFile::remove(tempPath);
     count = lines.size();
     for(int i=0;i<count;i++){
         ui->textBrowser->append(lines.at(i));

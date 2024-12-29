@@ -2,6 +2,5 @@
     <qresource prefix="/">
         <file>red.png</file>
         <file>icon.png</file>
-        <file>refresh.py</file>
     </qresource>
 </RCC>

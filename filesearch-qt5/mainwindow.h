@@ -15,6 +15,7 @@
 #include <QHeaderView>
 #include <QFile>
 #include <QQueue>
+#include <QOperatingSystemVersion>
 #include "MySqlite.h"
 
 QT_BEGIN_NAMESPACE
@@ -37,6 +38,7 @@ private:
     int sortStatus;
     QString pythonPath;
     QString workPath;
+    QString splitSymbol;
     QQueue<QString> directory;
 
     //mainwindow.cpp
@@ -46,6 +48,7 @@ private:
     void setTestBrowser(int row);
 
     //support.cpp
+    void localize();
     void sortName();
     void sortSize();
     void sortPath();
@@ -53,15 +56,14 @@ private:
     void sortType();
     void filtrate(bool enableDate,QString name,QString type,QDate date);
     void search(QString keyWord);
-    void openFile(int row,int colum);
     void handleCell(int row,int colum);
     void about();
     void reverse(bool rever);
-    void refreshDataBase();
+    void refreshDataBase(QString workPath);
     void refreshKeyWord();
     void horizontalSort(int row);
     void executePython(QString scriptPath);
-//    void bfsDirectory(QString);
+    void bfsDirectory(QString);
 };
 
 #endif // MAINWINDOW_H

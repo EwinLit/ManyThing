@@ -81,3 +81,12 @@ void MySqlite::insertItem(QString name, QString path, double size, QString time,
     query.exec(cmd);
 }
 
+void MySqlite::updateItem(QString name, QString path, double size, QString time){
+    QSqlQuery query;
+    QString cmd = QString("UPDATE file "
+                          "SET size = %1, time = \"%2\""
+                          "WHERE path = \"%3\" and name = \"%4\";")
+            .arg(size).arg(time).arg(path).arg(name);
+    query.exec(cmd);
+}
+

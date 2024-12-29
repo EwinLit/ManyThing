@@ -47,12 +47,6 @@ void MainWindow::filtrate(bool enableDate,QString name,QString type,QDate date){
     refreshTable(false);
 }
 
-void MainWindow::openFile(int row, int colum){
-    if(colum!=0||colum!=1) return;
-    MyFile myFile = myFileList.at(row);
-
-}
-
 void MainWindow::handleCell(int row, int colum){
     MyFile myFile = myFileList.at(row);
     QClipboard *clipboard = QApplication::clipboard();
@@ -75,12 +69,13 @@ void MainWindow::about(){
 }
 
 
-void MainWindow::refreshDataBase(){
-    executePython(workPath+"refreshD.py");
+void MainWindow::refreshDataBase(QString workPath){
+    bfsDirectory(workPath);
+    QMessageBox::information(nullptr,"Database","Refresh Database Finished");
 }
 
 void MainWindow::refreshKeyWord(){
-    executePython(workPath+"refreshK.py");
+    executePython(workPath+"refresh.py");
 }
 
 void MainWindow::horizontalSort(int row){
@@ -152,27 +147,43 @@ void MainWindow::executePython(QString scriptPath){
     QMessageBox::information(nullptr,"Refresh","Refresh Finished");
 }
 
-//void MainWindow::bfsDirectory(QString path){
-//    directory.clear();
-//    directory.append(path);
-//    while(directory.empty()==false){
-//        QDir dir(path);
-//        if (!dir.exists() || !dir.isReadable()) {
-//            continue;
-//        }
-//        QDirIterator it(path, QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
-//        while (it.hasNext()) {
-//            QString currentPath = it.next();
-//            QFileInfo fileinfo(currentPath);
-//            if (QFileInfo(currentPath).isDir()) {
-//                directory.append(currentPath);
-//            }
-//            else{
-//                dataBase.insertItem(fileinfo.fileName(),fileinfo.absolutePath(),fileinfo.size()*0.001,MyTime(fileinfo.lastModified()).toString(),fileinfo.suffix());
-//            }
-//        }
-//    }
-//}
+void MainWindow::bfsDirectory(QString path){
+    directory.clear();
+    directory.append(path);
+    while(directory.empty()==false){
+        QDir dir(directory.front());
+        directory.pop_front();
+        if (!dir.exists() || !dir.isReadable()) {
+            continue;
+        }
+        QDirIterator it(path, QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
+        while (it.hasNext()) {
+            QString currentPath = it.next();
+            QFileInfo fileinfo(currentPath);
+            if (QFileInfo(currentPath).isDir()) {
+                directory.append(currentPath);
+            }
+            else{
+                dataBase.insertItem(fileinfo.fileName(),fileinfo.absolutePath(),fileinfo.size()*0.001,MyTime(fileinfo.lastModified()).toString(),fileinfo.suffix());
+                dataBase.updateItem(fileinfo.fileName(),fileinfo.absolutePath(),fileinfo.size()*0.001,MyTime(fileinfo.lastModified()).toString());
+            }
+        }
+    }
+}
+
+void MainWindow::localize(){
+    QOperatingSystemVersion osVersion = QOperatingSystemVersion::current();
+    if(osVersion.type()==QOperatingSystemVersion::Windows){
+        pythonPath = "C://Users//bitap//AppData//Local//Programs//Python//Python39//python.exe";
+        workPath = "D://Code//Qt//ManyThing//.filesearch//";
+        splitSymbol = "//";
+    }
+    else{
+        pythonPath = "python";
+        workPath = QDir::homePath()+"/.filesearch/";
+        splitSymbol = "/";
+    }
+}
 
 
 
