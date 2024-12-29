@@ -2,7 +2,22 @@
 ## Python部分
 requirements
 ```
-//TODO:请童瑜嫣补充
+# NLP关键词提取相关
+pip install nltk
+pip install PyPDF2
+pip install python-docx
+pip installtransformers
+
+# 安装maturin及其依赖的Rust工具链
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+pip install maturin
+
+# 从源码构建pytorch
+wget https://github.com/pytorch/pytorch/releases/download/v2.4.0/pytorch-v2.4.0.tar.gz
+tar xvf pytorch-v2.4.0.tar.gz
+cd pytorch-v2.4.0/
+bash build.sh
+
 # 文件预览相关
 PyMuPDF
 python-docx
