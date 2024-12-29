@@ -14,6 +14,7 @@ public:
     bool connectDataBase(QString dataBaseName);
     QList<MyFile> queryKeyWord(QString keyWord);
     void test();
+    void insertItem(QString name,QString path,double size,QString time,QString type);
 };
 
 #endif // SQLITE_H

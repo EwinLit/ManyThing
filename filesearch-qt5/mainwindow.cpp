@@ -6,30 +6,40 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     sortStatus = 0;
+    pythonPath = "C://Users//bitap//AppData//Local//Programs//Python//Python39//python.exe";
+    workPath = "D://";
+//    pythonPath = "python";
+//    workPath = QDir::homePath()+"/.filesearch/";
     ui->setupUi(this);
+
     this->setWindowTitle("File Searcher");
     this->setWindowIcon(QIcon(":/icon.png"));
-    ui->dateEdit->setDate(QDate(1752,9,14));
+    ui->dateEdit->setDate(QDate::currentDate());
+
     ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    this->success = dataBase.connectDataBase("D://files.db");
+
+    this->success = dataBase.connectDataBase(workPath+"files.db");
+
     search("");
-    connect(ui->actionRefresh,&QAction::triggered,this,[&](){refreshDataBase();});
+
+    connect(ui->actionRefreshDataBase,&QAction::triggered,this,[&](){refreshDataBase();});
+    connect(ui->actionRefreshKeyWord,&QAction::triggered,this,[&](){refreshKeyWord();});
+
     connect(ui->actionQuit,&QAction::triggered,this,[&](){MainWindow::close();});
-    connect(ui->pushButton,&QPushButton::clicked,this,[&](){search(ui->lineEdit->text());});
     connect(ui->actionName,&QAction::triggered,this,[&](){sortName();});
     connect(ui->actionPath,&QAction::triggered,this,[&](){sortPath();});
     connect(ui->actionSizz,&QAction::triggered,this,[&](){sortSize();});
     connect(ui->actionEdit_Time,&QAction::triggered,this,[&](){sortEditTime();});
     connect(ui->actionType,&QAction::triggered,this,[&](){sortType();});
     connect(ui->actionReverse,&QAction::triggered,this,[&](){reverse(true);});
-    connect(ui->pushButton_2,&QPushButton::clicked,this,[&](){filtrate(ui->lineEdit_2->text(),ui->lineEdit_3->text(),ui->dateEdit->date());});
-    connect(ui->tableWidget,&QTableWidget::cellClicked,this,[&](int row,int colum){handleCell(row,colum);});
-    connect(ui->tableWidget,&QTableWidget::cellDoubleClicked,this,[&](int row,int colum){openFile(row,colum);});
     connect(ui->actionAbout,&QAction::triggered,this,[&](){about();});
-    connect(ui->actionHelp,&QAction::triggered,this,[&](){help();});
-    connect(ui->tableWidget->horizontalHeader(),&QHeaderView::sectionClicked,this,[&](int row){horizontalSort(row);});
-    connect(ui->actionInstall_Tools,&QAction::triggered,this,[&](){installTools();});
 
+    connect(ui->pushButton,&QPushButton::clicked,this,[&](){search(ui->lineEdit->text());});
+    connect(ui->pushButton_2,&QPushButton::clicked,this,[&](){filtrate(ui->checkBox->isChecked(),ui->lineEdit_2->text(),ui->lineEdit_3->text(),ui->dateEdit->date());});
+
+    connect(ui->tableWidget->horizontalHeader(),&QHeaderView::sectionClicked,this,[&](int row){horizontalSort(row);});
+    connect(ui->tableWidget,&QTableWidget::cellClicked,this,[&](int row,int colum){handleCell(row,colum);});
+    //connect(ui->tableWidget,&QTableWidget::cellDoubleClicked,this,[&](int row,int colum){openFile(row,colum);});
 }
 
 MainWindow::~MainWindow()
@@ -96,15 +106,15 @@ void MainWindow::setTestBrowser(int row){
     ui->textBrowser->clear();
     MyFile myfile = myFileList.at(row);
     QString path(myfile.getPath()+"//"+myfile.getName());
-    QString tempPath("D://temp.txt");
-    if(path.contains(".doc")||path.contains(".docx")){
-        executePython("D://readWord.py");
-        path = tempPath;
-    }
-    if(path.contains(".pdf")){
-        executePython("D://readPdf.py");
-        path = tempPath;
-    }
+    QString tempPath(workPath+"temp.txt");
+//    if(path.contains(".doc")||path.contains(".docx")){
+//        executePython(workPath+"readWord.py");
+//        path = tempPath;
+//    }
+//    if(path.contains(".pdf")){
+//        executePython(workPath+"readPdf.py");
+//        path = tempPath;
+//    }
     QFile file(path);
     if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) return;
     QTextStream in(&file);

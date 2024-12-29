@@ -10,9 +10,11 @@
 #include <QMessageBox>
 #include <QProcess>
 #include <QDir>
+#include <QDirIterator>
 #include <QTextStream>
 #include <QHeaderView>
 #include <QFile>
+#include <QQueue>
 #include "MySqlite.h"
 
 QT_BEGIN_NAMESPACE
@@ -33,6 +35,9 @@ private:
     QList<MyFile> myFileList;
     MySqlite dataBase;
     int sortStatus;
+    QString pythonPath;
+    QString workPath;
+    QQueue<QString> directory;
 
     //mainwindow.cpp
     void refreshTable(bool reverse);
@@ -46,17 +51,17 @@ private:
     void sortPath();
     void sortEditTime();
     void sortType();
-    void filtrate(QString name,QString type,QDate date);
+    void filtrate(bool enableDate,QString name,QString type,QDate date);
     void search(QString keyWord);
     void openFile(int row,int colum);
     void handleCell(int row,int colum);
     void about();
-    void help();
     void reverse(bool rever);
     void refreshDataBase();
+    void refreshKeyWord();
     void horizontalSort(int row);
     void executePython(QString scriptPath);
-    void installTools();
+//    void bfsDirectory(QString);
 };
 
 #endif // MAINWINDOW_H

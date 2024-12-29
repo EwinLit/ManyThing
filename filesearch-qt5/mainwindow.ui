@@ -83,6 +83,13 @@
         <widget class="QLineEdit" name="lineEdit_3"/>
        </item>
        <item>
+        <widget class="QCheckBox" name="checkBox">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QDateEdit" name="dateEdit"/>
        </item>
        <item>
@@ -136,9 +143,9 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionRefresh"/>
     <addaction name="actionQuit"/>
-    <addaction name="actionInstall_Tools"/>
+    <addaction name="actionRefreshDataBase"/>
+    <addaction name="actionRefreshKeyWord"/>
    </widget>
    <widget class="QMenu" name="menuSort">
     <property name="title">
@@ -161,7 +168,6 @@
      <string>About</string>
     </property>
     <addaction name="actionAbout"/>
-    <addaction name="actionHelp"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSort"/>
@@ -249,14 +255,19 @@
     <string>Help</string>
    </property>
   </action>
-  <action name="actionRefresh">
+  <action name="actionRefreshDataBase">
    <property name="text">
-    <string>Refresh</string>
+    <string>Refresh Database</string>
    </property>
   </action>
   <action name="actionInstall_Tools">
    <property name="text">
     <string>Install Tools</string>
+   </property>
+  </action>
+  <action name="actionRefreshKeyWord">
+   <property name="text">
+    <string>Refresh Keyword</string>
    </property>
   </action>
  </widget>

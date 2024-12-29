@@ -35,13 +35,13 @@ void MainWindow::sortPath(){
     refreshTable(false);
 }
 
-void MainWindow::filtrate(QString name,QString type,QDate date){
+void MainWindow::filtrate(bool enableDate,QString name,QString type,QDate date){
     int i=0;
     while(i<myFileList.size()){
         MyFile myfile = myFileList.at(i);
         if(name!=""&&(myfile.getName().contains(name)==false)) myFileList.removeAt(i);
         else if(type!=""&&myfile.getType().contains(type)==false) myFileList.removeAt(i);
-        else if(date!=QDate(1752,9,14)&&myfile.getDate()!=date) myFileList.removeAt(i);
+        else if(enableDate==true&&myfile.getDate()!=date) myFileList.removeAt(i);
         else i++;
     }
     refreshTable(false);
@@ -74,13 +74,13 @@ void MainWindow::about(){
     QMessageBox::information(nullptr,"About","Group Member:\n2024E8013282035 尹继营\n2024E8013282035 童瑜嫣\n2024E8013282035 贾   辉");
 }
 
-void MainWindow::help(){
-
-}
 
 void MainWindow::refreshDataBase(){
-    executePython("D://refresh.py");
+    executePython(workPath+"refreshD.py");
+}
 
+void MainWindow::refreshKeyWord(){
+    executePython(workPath+"refreshK.py");
 }
 
 void MainWindow::horizontalSort(int row){
@@ -140,7 +140,7 @@ void MainWindow::horizontalSort(int row){
 
 void MainWindow::executePython(QString scriptPath){
     QProcess process;
-    process.start("C://Users//bitap//AppData//Local//Programs//Python//Python39//python.exe",QStringList()<<scriptPath);
+    process.start(pythonPath,QStringList()<<scriptPath);
     if (!process.waitForStarted()) {
         QMessageBox::information(nullptr,"Error","Failed to start Python script.");
         return;
@@ -152,9 +152,27 @@ void MainWindow::executePython(QString scriptPath){
     QMessageBox::information(nullptr,"Refresh","Refresh Finished");
 }
 
-void MainWindow::installTools(){
-
-}
+//void MainWindow::bfsDirectory(QString path){
+//    directory.clear();
+//    directory.append(path);
+//    while(directory.empty()==false){
+//        QDir dir(path);
+//        if (!dir.exists() || !dir.isReadable()) {
+//            continue;
+//        }
+//        QDirIterator it(path, QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
+//        while (it.hasNext()) {
+//            QString currentPath = it.next();
+//            QFileInfo fileinfo(currentPath);
+//            if (QFileInfo(currentPath).isDir()) {
+//                directory.append(currentPath);
+//            }
+//            else{
+//                dataBase.insertItem(fileinfo.fileName(),fileinfo.absolutePath(),fileinfo.size()*0.001,MyTime(fileinfo.lastModified()).toString(),fileinfo.suffix());
+//            }
+//        }
+//    }
+//}
 
 
 

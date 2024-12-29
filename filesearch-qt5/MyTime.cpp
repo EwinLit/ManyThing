@@ -1,5 +1,14 @@
 #include "MyTime.h"
 
+MyTime::MyTime(QDateTime _time){
+    this->year = _time.date().year();
+    this->month = _time.date().month();
+    this->day = _time.date().day();
+    this->hour = _time.time().hour();
+    this->minute = _time.time().minute();
+    this->second = _time.time().second();
+}
+
 MyTime::MyTime(QString _time){
     //2001/01/01-01:01:01
     this->year = _time.mid(0,4).toInt();
@@ -55,6 +64,7 @@ MyTime& MyTime::operator=(const MyTime& obj){
     this->hour = obj.hour;
     this->minute = obj.minute;
     this->second = obj.second;
+    return *this;
 }
 
 int MyTime::getyear(){
