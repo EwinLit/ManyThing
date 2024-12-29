@@ -1,4 +1,13 @@
 # 如何安装
+## Python部分
+requirements
+```
+//TODO:请童瑜嫣补充
+# 文件预览相关
+PyMuPDF
+python-docx
+Spire.Doc
+```
 ## QT部分
 1. 运行以下指令安装环境：
 ```
