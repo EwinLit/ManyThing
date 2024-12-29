@@ -9,5 +9,10 @@ dnf install qt5-devel
 ```
 git clone -b master https://github.com/EwinLit/ManyThing.git
 ```
-3. 运行项目中的install.sh
+3. 进入克隆的目录，运行项目中的install.sh
+```
+cd ManyThing
+chmod u+x install.sh
+./install.hh
+```
 4. 运行生成在主目录下的start.sh
