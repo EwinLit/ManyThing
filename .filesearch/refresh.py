@@ -5,35 +5,42 @@ import sqlite3
 if __name__ == "__main__":
     # 文档关键词提取
     text_path = Path.home() / "ManyThing/text_files"
+    ori_db_path = Path("./ori_keywords.db")
+    db_path = Path("./keyword.db")
+
     valid_extensions = {".txt", ".docx", ".pdf"}
     for file_path in text_path.rglob("*"):
-        print(file_path)
+        print(f"Processing file: {file_path}")
         if file_path.is_file() and file_path.suffix.lower() in valid_extensions:
-            output_name = file_path.stem
-            extract_keywords.main(file_path, Path("./keywords") / f"{output_name}.txt")
+            extract_keywords.main(file_path.resolve(), ori_db_path)
+            conn = sqlite3.connect(ori_db_path)
+            cursor = conn.cursor()
+            
+            cursor.execute("SELECT keywords FROM ori_keywords WHERE path = ?", (str(file_path),))
+            result = cursor.fetchone()
+
+            if result:
+                keywords = result[0].split(", ")
+                print(f"Extracted keywords: {keywords}")
+            else:
+                print("No keywords found in database.")
+
+            conn.close()
 
     # 数据库创建
-    # 构建文档-关键词字典
-    input_directory = "keywords"
-    documents, file_paths = create_database.build_documents_dictionary(input_directory)
+    create_database.build_inverted_index_from_keyword_db(ori_db_path, db_path)
 
-    # 创建 SQLite 数据库
-    db_path = "keywords.db"
-    create_database.create_database(db_path)
-
-    # 添加文档到数据库
-    create_database.add_data_to_database(db_path, documents, file_paths)
-
-    conn = conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
+    inv_conn = sqlite3.connect(db_path)
+    inv_cursor = inv_conn.cursor()
 
     # 查询所有数据
-    cursor.execute("SELECT * FROM keyword")
-    rows = cursor.fetchall()
+    inv_cursor.execute("SELECT * FROM keyword")
+    rows = inv_cursor.fetchall()
 
     # 打印数据
+    print("\n倒排索引数据库内容：")
     for row in rows:
         print(row)
 
     # 关闭连接
-    conn.close()
+    inv_conn.close()
