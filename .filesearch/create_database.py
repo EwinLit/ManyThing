@@ -17,34 +17,45 @@ def create_database(db_path):
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             word TEXT NOT NULL,
             name TEXT NOT NULL,
-            path TEXT NOT NULL
+            path TEXT NOT NULL,
+            UNIQUE(word, name, path)
         )
     ''')
     conn.commit()
     conn.close()
 
 # 添加文档及其关键词到数据库
-def add_data_to_database(db_path, documents, file_paths):
+def build_inverted_index_from_keyword_db(db_path, inverted_db_path):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM keyword")
-    for doc_id, keywords in documents.items():
-        file_path = file_paths[doc_id]
-        for keyword in keywords:
-            # 检查是否已存在相同的关键词-文件名对
-            cursor.execute('''
-                SELECT 1 FROM keyword WHERE word = ? AND name = ? AND path = ?
-            ''', (keyword, doc_id, file_path))
-            if cursor.fetchone() is None:
-                # 插入数据
-                cursor.execute('''
+
+    # 读取所有关键词和对应的文档路径
+    cursor.execute("SELECT path, keywords FROM ori_keywords")
+    rows = cursor.fetchall()
+
+    create_database(inverted_db_path)
+    inverted_conn = sqlite3.connect(inverted_db_path)
+    inverted_cursor = inverted_conn.cursor()
+
+    for path, keywords in rows:
+        file_name = Path(path).name
+        keyword_list = [kw.strip() for kw in keywords.split(",") if kw.strip()]
+        
+        for keyword in keyword_list:
+            try:
+                # 插入数据，同时确保唯一性约束
+                inverted_cursor.execute('''
                     INSERT INTO keyword (word, name, path) VALUES (?, ?, ?)
-                ''', (keyword, doc_id, file_path))
-    conn.commit()
+                ''', (keyword, file_name, path))
+            except sqlite3.IntegrityError:
+                # 忽略重复数据
+                print(f"Duplicate entry ignored for word: {keyword}, name: {file_name}, path: {path}")
+    inverted_conn.commit()
+    inverted_conn.close()
     conn.close()
 
 # 根据关键词检索文档
-def search_keywords(db_path, query_str):
+def search_inverted_index(db_path, query_str):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     #query = f"%{query_str}%"
@@ -53,8 +64,9 @@ def search_keywords(db_path, query_str):
     ''', (query_str,))
     results = cursor.fetchall()
     conn.close()
-    return [result[0] for result in results]
+    return results
 
+'''
 # 从文件夹构建文档-关键词字典
 def build_documents_dictionary(input_dir):
     documents = {}
@@ -77,7 +89,7 @@ def extract_keywords_from_nl(nl_query):
     words = word_tokenize(nl_query)
     keywords = [word.lower() for word in words if word.isalnum() and word.lower() not in stop_words]
     return keywords
-'''
+
 if __name__ == "__main__":
     # 构建文档-关键词字典
     input_directory = "keywords"
