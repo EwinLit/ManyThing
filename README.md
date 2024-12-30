@@ -46,6 +46,7 @@ Spire.Doc
    qmake-qt5
    make clean
    make
+   rm -rf ~/filesearch.sh
    echo ~/.filesearch/filesearch-qt5/filesearch > ~/filesearch.sh
    chmod 777 ~/filesearch.sh
    ```
