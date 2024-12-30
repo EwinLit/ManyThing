@@ -48,9 +48,12 @@ def main(input_file, output_file, top_k=10):
     save_keywords(keywords, output_file)
     print(f"Keywords saved to {output_file}")
 
+'''
 if __name__ == "__main__":
     text_path = Path("./text_files")
+    valid_extensions = {".txt", ".docx", ".pdf"}
     for file_path in text_path.rglob("*"):
-        if file_path.is_file():
+        if file_path.is_file and text_path.suffix.lower() in valid_extensions:
             output_name = file_path.stem
             main(file_path, Path("./keywords") / f"{output_name}.txt")
+'''

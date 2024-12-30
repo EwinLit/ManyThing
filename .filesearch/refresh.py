@@ -1,14 +1,14 @@
-import os
-import extract_keywords, create_database
 from pathlib import Path
+import extract_keywords, create_database
 import sqlite3
 
 if __name__ == "__main__":
     # 文档关键词提取
-    text_path = Path("./text_files")
+    text_path = Path.home() / "ManyThing/text_files"
     valid_extensions = {".txt", ".docx", ".pdf"}
     for file_path in text_path.rglob("*"):
-        if file_path.is_file() and text_path.suffix.lower() in valid_extensions:
+        print(file_path)
+        if file_path.is_file() and file_path.suffix.lower() in valid_extensions:
             output_name = file_path.stem
             extract_keywords.main(file_path, Path("./keywords") / f"{output_name}.txt")
 
