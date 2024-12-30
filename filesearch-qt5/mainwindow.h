@@ -64,7 +64,7 @@ private:
     void refreshKeyWord();
     void horizontalSort(int row);
     void executePython(QString scriptPath);
-    void bfsDirectory(QString);
+    void bfsDirectory(QString path);
 };
 
 #endif // MAINWINDOW_H
