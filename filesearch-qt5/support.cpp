@@ -77,7 +77,7 @@ void MainWindow::refreshDataBase(){
 }
 
 void MainWindow::refreshKeyWord(){
-    executePython(workPath+"refresh.py");
+    executePython(workPath+"extract_keywords"+splitSymbol+"refresh.py");
 }
 
 void MainWindow::horizontalSort(int row){
