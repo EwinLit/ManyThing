@@ -49,6 +49,7 @@ Spire.Doc
    qmake-qt5
    make clean
    make
+   rm -rf ~/refreshKeyWord.sh
    rm -rf ~/filesearch.sh
    echo "py ~/.filesearch/extract_keywords/refresh.py" > ~/refreshKeyWord.sh
    echo ~/.filesearch/filesearch-qt5/filesearch > ~/filesearch.sh
