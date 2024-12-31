@@ -9,8 +9,6 @@ from nltk.corpus import stopwords
 def create_database(db_path):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    # 删除表格（如果表格已存在）
-    cursor.execute('''DROP TABLE IF EXISTS keyword''')
     # 创建表
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS keyword (
