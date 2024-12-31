@@ -4,7 +4,7 @@ import sqlite3
 
 if __name__ == "__main__":
     # 文档关键词提取
-    text_path = Path.home() / "ManyThing/text_files"
+    text_path = Path("/home")
     ori_db_path = Path("./ori_keywords.db")
     db_path = Path("./keyword.db")
 
