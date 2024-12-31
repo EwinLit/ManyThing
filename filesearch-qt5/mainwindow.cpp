@@ -17,12 +17,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    this->success = dataBase.connectDataBase(workPath+"files.db");
-
     search("");
 
     connect(ui->actionRefreshDataBase,&QAction::triggered,this,[&](){refreshDataBase();});
-    connect(ui->actionRefreshKeyWord,&QAction::triggered,this,[&](){refreshKeyWord();});
+//    connect(ui->actionRefreshKeyWord,&QAction::triggered,this,[&](){refreshKeyWord();});
 
     connect(ui->actionQuit,&QAction::triggered,this,[&](){MainWindow::close();});
     connect(ui->actionName,&QAction::triggered,this,[&](){sortName();});

@@ -4,15 +4,15 @@ MySqlite::MySqlite(){
 
 }
 
-bool MySqlite::connectDataBase(QString dataBaseName){
+void MySqlite::connectDataBase(QString dataBaseName){
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(dataBaseName);
     if (!db.open()) {
       QMessageBox::information(nullptr,"DataBase","Failed To Open DataBase");
-      return false;
     }
     QSqlQuery query;
+    query.exec("PRAGMA journal_mode = OFF");
     QString cmd = QString("CREATE TABLE \"file\" ("
                                              "\"name\"	TEXT,"
                                              "\"path\"	TEXT,"
@@ -30,7 +30,6 @@ bool MySqlite::connectDataBase(QString dataBaseName){
                                         "PRIMARY KEY(\"id\")"
                                     ")");
     query.exec(cmd);
-    return true;
 }
 
 QList<MyFile> MySqlite::queryKeyWord(QString keyWord){
@@ -42,7 +41,7 @@ QList<MyFile> MySqlite::queryKeyWord(QString keyWord){
     QString cmd = QString("SELECT * FROM %1 WHERE word = \"%2\"").arg("keyword").arg(keyWord);
     if(query.exec(cmd) == false) return myFiles;
     while(query.next()){
-        myFiles.append(queryFile(query.value(1).toString(),query.value(2).toString()));
+        myFiles.append(queryFile(query.value("path").toString(),query.value("name").toString()));
     }
     return myFiles;
 }
@@ -78,5 +77,10 @@ void MySqlite::deleteTable(){
     QSqlQuery query;
     QString cmd = QString("DELETE FROM %1 WHERE 1").arg("file");
     query.exec(cmd);
+}
+
+void MySqlite::disconnectDataBase(){
+    db.close();
+    QSqlDatabase::removeDatabase(db.connectionName());
 }
 

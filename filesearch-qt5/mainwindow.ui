@@ -145,7 +145,6 @@
     </property>
     <addaction name="actionQuit"/>
     <addaction name="actionRefreshDataBase"/>
-    <addaction name="actionRefreshKeyWord"/>
    </widget>
    <widget class="QMenu" name="menuSort">
     <property name="title">

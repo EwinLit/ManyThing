@@ -13,7 +13,8 @@ private:
     QList<MyFile> queryFile(QString path,QString name);
 public:
     MySqlite();
-    bool connectDataBase(QString dataBaseName);
+    void connectDataBase(QString dataBaseName);
+    void disconnectDataBase();
     QList<MyFile> queryKeyWord(QString keyWord);
     void deleteTable();
     void insertItem(QString name,QString path,double size,QString time,QString type);
