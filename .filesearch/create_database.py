@@ -37,6 +37,7 @@ def build_inverted_index_from_keyword_db(db_path, inverted_db_path):
 
     for path, keywords in rows:
         file_name = Path(path).name
+        folder_path = Path(path).parent
         keyword_list = [kw.strip() for kw in keywords.split(",") if kw.strip()]
         
         for keyword in keyword_list:
@@ -44,7 +45,7 @@ def build_inverted_index_from_keyword_db(db_path, inverted_db_path):
                 # 插入数据，同时确保唯一性约束
                 inverted_cursor.execute('''
                     INSERT INTO keyword (word, name, path) VALUES (?, ?, ?)
-                ''', (keyword, file_name, path))
+                ''', (keyword, file_name, str(folder_path)))
             except sqlite3.IntegrityError:
                 # 忽略重复数据
                 print(f"Duplicate entry ignored for word: {keyword}, name: {file_name}, path: {path}")
