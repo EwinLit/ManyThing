@@ -46,6 +46,7 @@ private:
     void echoInfo(QString info);
     void setIcon(int choice);
     void setTestBrowser(int row);
+    void viewKeyWord();
 
     //support.cpp
     void localize();
