@@ -2,9 +2,7 @@
 
 void MainWindow::search(QString keyWord){
     setIcon(0);
-    dataBase.connectDataBase(workPath+"files.db");
     myFileList = dataBase.queryKeyWord(keyWord);
-    dataBase.disconnectDataBase();
     refreshTable(false);
 }
 
