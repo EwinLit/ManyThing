@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
     sortStatus = 0;
     ui->setupUi(this);
 
+    dataBase.connectDataBase(workPath+"files.db");
     this->setWindowTitle("File Searcher");
     this->setWindowIcon(QIcon(":/icon.png"));
     ui->dateEdit->setDate(QDate::currentDate());
