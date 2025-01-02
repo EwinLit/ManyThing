@@ -20,7 +20,6 @@ MainWindow::MainWindow(QWidget *parent)
     search("");
 
     connect(ui->actionRefreshDataBase,&QAction::triggered,this,[&](){refreshDataBase();});
-//    connect(ui->actionRefreshKeyWord,&QAction::triggered,this,[&](){refreshKeyWord();});
 
     connect(ui->actionQuit,&QAction::triggered,this,[&](){MainWindow::close();});
     connect(ui->actionName,&QAction::triggered,this,[&](){sortName();});
@@ -30,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionType,&QAction::triggered,this,[&](){sortType();});
     connect(ui->actionReverse,&QAction::triggered,this,[&](){reverse(true);});
     connect(ui->actionAbout,&QAction::triggered,this,[&](){about();});
+    connect(ui->actionView_KeyWord,&QAction::triggered,this,[&](){viewKeyWord();});
 
     connect(ui->pushButton,&QPushButton::clicked,this,[&](){search(ui->lineEdit->text());});
     connect(ui->pushButton_2,&QPushButton::clicked,this,[&](){filtrate(ui->checkBox->isChecked(),ui->lineEdit_2->text(),ui->lineEdit_3->text(),ui->dateEdit->date());});
@@ -118,6 +118,27 @@ void MainWindow::setTestBrowser(int row){
         ui->textBrowser->append(lines.at(i));
     }
 
+}
+
+void MainWindow::viewKeyWord(){
+    QSqlQuery query = dataBase.viewKeyWord();
+    setIcon(7);
+    ui->tableWidget->clear();
+    ui->tableWidget->setColumnCount(3);
+    ui->tableWidget->setHorizontalHeaderLabels(QStringList()<<"keyword"<<"Name"<<"Path");
+    ui->tableWidget->verticalHeader()->setVisible(false);
+    ui->tableWidget->setSelectionMode(QAbstractItemView::NoSelection);
+    ui->tableWidget->setColumnWidth(0,150);
+    ui->tableWidget->setColumnWidth(1,150);
+    ui->tableWidget->setColumnWidth(2,400);
+    int row = 0;
+    while (query.next()) {
+        ui->tableWidget->setItem(row,0,new QTableWidgetItem(query.value("word").toString()));
+        ui->tableWidget->setItem(row,1,new QTableWidgetItem(query.value("name").toString()));
+        ui->tableWidget->setItem(row,2,new QTableWidgetItem(query.value("path").toString()));
+        row++;
+    }
+    echoInfo(QString::number(row)+QString("  Objects."));
 }
 
 
