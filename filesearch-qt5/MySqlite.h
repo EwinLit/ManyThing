@@ -13,6 +13,7 @@ private:
     QList<MyFile> queryFile(QString path,QString name);
 public:
     MySqlite();
+    QSqlQuery viewKeyWord();
     void connectDataBase(QString dataBaseName);
     void disconnectDataBase();
     QList<MyFile> queryKeyWord(QString keyWord);
