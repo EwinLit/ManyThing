@@ -145,6 +145,7 @@
     </property>
     <addaction name="actionQuit"/>
     <addaction name="actionRefreshDataBase"/>
+    <addaction name="actionView_KeyWord"/>
    </widget>
    <widget class="QMenu" name="menuSort">
     <property name="title">
@@ -267,6 +268,11 @@
   <action name="actionRefreshKeyWord">
    <property name="text">
     <string>Refresh Keyword</string>
+   </property>
+  </action>
+  <action name="actionView_KeyWord">
+   <property name="text">
+    <string>View KeyWord</string>
    </property>
   </action>
  </widget>
