@@ -87,7 +87,6 @@ void MySqlite::disconnectDataBase(){
 QSqlQuery MySqlite::viewKeyWord(){
     QSqlQuery query;
     QString cmd = QString("SELECT * FROM %1").arg("keyword");
-    qDebug()<<cmd;
     query.exec(cmd);
     return query;
 }
